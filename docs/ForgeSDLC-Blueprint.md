@@ -458,4 +458,3 @@ Interview narrative after implementation: “I built a stateful SDLC harness tha
 - Budgets: https://docs.litellm.ai/docs/proxy/users
 - Langfuse OpenTelemetry SDK: https://langfuse.com/docs/observability/sdk/overview
 - Evaluation experiments: https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk
-

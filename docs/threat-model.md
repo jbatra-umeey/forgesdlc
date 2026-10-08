@@ -21,4 +21,3 @@ Implemented guardrails: one candidate file, workspace containment including syml
 **Not cost-certified:** default replay has zero provider requests. Gateway cost is unknown without authoritative pricing/accounting. Conservative request-unit reservations are not guaranteed financial caps.
 
 No third-party vulnerability scanner, hardened worker, authenticated MCP server, tracing exporter, canary controller, schema migration runner, or tenant-isolation suite is implemented. Their intended scenarios remain in the blueprint catalog.
-

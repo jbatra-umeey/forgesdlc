@@ -13,4 +13,3 @@ Not verified here: live gateway inference, live Jira/GitHub account permissions 
 The published `examples/verified-run` directory (the ZIP archive uses `runs/interview`) contains actual output from the local replay. Provider call counts are zero in that run. C telemetry is synthetic: baseline p95 108 ms, candidate p95 658 ms. Those numbers are fixture observations, not measured production performance.
 
 Reproduce verification with the commands in README.md. Do not compare these execution times across machines as a benchmark.
-

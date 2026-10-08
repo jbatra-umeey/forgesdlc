@@ -42,4 +42,3 @@ In replay, diagnosis is a seeded-mutation rule and the patch is a reference impl
 “The important loop is not just generating code: observations become scoped engineering work, tests determine success, and each transition leaves evidence. The next integration stages are real Jira/GitHub webhooks, hardened execution, LangGraph persistence, live-provider evaluation, and verified sandbox releases.”
 
 Point to the explicit built-versus-designed table. The broader 60-scenario catalog is a roadmap, not a completed test suite.
-
