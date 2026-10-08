@@ -1,0 +1,11 @@
+diff --git a/subscription.py b/subscription.py
+index 6bd5d05..e5e05d8 100644
+--- a/subscription.py
++++ b/subscription.py
+@@ -8,7 +8,7 @@ import sqlite3
+ import time
+ import uuid
+ 
+-LOOKUP_DELAY_SECONDS = 0.04
++LOOKUP_DELAY_SECONDS = 0.0
+ PRICES = {"basic": 500, "premium": 900}

@@ -1,0 +1,10 @@
+{
+  "release": "c314241da37aed9d740ea3f9af5b6450d52ef78d",
+  "baseline_release": "266d9a44ef4883560b42727733ccecbbc0e2632f",
+  "deployed_at": "2026-01-01T12:00:00Z",
+  "environment": "sandbox",
+  "route": "GET /subscriptions/{id}",
+  "cohort": "same-sandbox-profile",
+  "mode": "simulated-deployment-record",
+  "production_deployed": false
+}

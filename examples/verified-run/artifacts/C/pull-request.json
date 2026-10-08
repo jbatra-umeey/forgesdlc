@@ -1,0 +1,13 @@
+{
+  "title": "Remediate subscription lookup latency",
+  "ticket": "LOCAL-LATENCY-1",
+  "head": "demo/latency-remediation",
+  "base": "demo/latency-release",
+  "base_commit": "c314241da37aed9d740ea3f9af5b6450d52ef78d",
+  "candidate_commit": "f911767aeb8145d0ee45400cc93aab8e6d5f6e32",
+  "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+  "status": "local-draft-bundle",
+  "url": null,
+  "github_created": false,
+  "body_path": "artifacts/C/pull-request.md"
+}

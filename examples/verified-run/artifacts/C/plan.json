@@ -1,0 +1,19 @@
+{
+  "agent": "planner",
+  "mode": "reference-replay",
+  "tasks": [
+    "Define contract and ADR",
+    "Implement SQLite service",
+    "Run independent service and HTTP checks",
+    "Prepare review and PR bundle"
+  ],
+  "constraints": [
+    "No payment processor",
+    "Sandbox identity only",
+    "Only subscription.py editable"
+  ],
+  "acceptance_criteria": [
+    "Remove injected lookup delay",
+    "Preserve service and HTTP conformance"
+  ]
+}
