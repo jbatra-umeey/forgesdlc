@@ -1,0 +1,30 @@
+name: Verify ForgeSDLC
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m unittest discover -s tests -v
+      - run: python -m forgesdlc demo --output runs/ci
+      - run: python -m forgesdlc verify-evidence --output runs/ci
+      - run: node tests/report-smoke.cjs runs/ci/report.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evidence-${{ matrix.python }}
+          path: |
+            runs/ci/report.html
+            runs/ci/summary.json
+            runs/ci/events.jsonl
+            runs/ci/manifest.json
+            runs/ci/artifacts
