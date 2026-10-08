@@ -21,4 +21,3 @@ include = ["forgesdlc*"]
 
 [tool.setuptools.package-data]
 forgesdlc = ["fixtures/*.json", "fixtures/*.py", "web/*.html"]
-

@@ -184,4 +184,3 @@ License: MIT. All sample data and identities are synthetic.
 ## Published sample evidence
 
 The [`examples/verified-run`](examples/verified-run) directory contains the verified local reference replay, its patches, test outputs, synthetic telemetry and an HTML report. Download/clone the repository to open the report; GitHub displays HTML as source. These are local fixture results, not live-provider or production claims. Run the commands above to generate a fresh execution.
-
