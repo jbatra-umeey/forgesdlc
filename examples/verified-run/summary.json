@@ -1,0 +1,287 @@
+{
+  "status": "passed",
+  "run_id": "1019a073b79a4eafb0d7b1871e580f8b",
+  "mode": "reference-replay",
+  "orchestrator": "stdlib",
+  "scenarios": {
+    "A": {
+      "status": "passed",
+      "title": "Autonomous feature delivery (scripted in replay)",
+      "ticket": "DEMO-101",
+      "verification": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "test_basic_price (__main__.suite_for.<locals>.ServiceContracts.test_basic_price) ... ok\ntest_conflicting_key (__main__.suite_for.<locals>.ServiceContracts.test_conflicting_key) ... ok\ntest_create_identity (__main__.suite_for.<locals>.ServiceContracts.test_create_identity) ... ok\ntest_get_and_cancel (__main__.suite_for.<locals>.ServiceContracts.test_get_and_cancel) ... ok\ntest_idempotent_create (__main__.suite_for.<locals>.ServiceContracts.test_idempotent_create) ... ok\ntest_input_validation (__main__.suite_for.<locals>.ServiceContracts.test_input_validation) ... ok\ntest_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration) ... ok\ntest_missing_key (__main__.suite_for.<locals>.ServiceContracts.test_missing_key) ... ok\ntest_not_found (__main__.suite_for.<locals>.ServiceContracts.test_not_found) ... ok\ntest_owner_isolation (__main__.suite_for.<locals>.ServiceContracts.test_owner_isolation) ... ok\ntest_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price) ... ok\ntest_same_key_different_customer (__main__.suite_for.<locals>.ServiceContracts.test_same_key_different_customer) ... ok\ntest_http_invalid_payload (__main__.suite_for.<locals>.HTTPContracts.test_http_invalid_payload) ... ok\ntest_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle) ... ok\ntest_http_missing_identity (__main__.suite_for.<locals>.HTTPContracts.test_http_missing_identity) ... ok\ntest_http_unknown_route (__main__.suite_for.<locals>.HTTPContracts.test_http_unknown_route) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.050s\n\nOK\n",
+        "duration_seconds": 0.168,
+        "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+        "oracle_sha256": "dd3a97bbbac72e6338da8a073788880d89519ac0d5e0538179fe7ed643044f8d",
+        "command": [
+          "python",
+          "-I",
+          "oracle.py",
+          "repository"
+        ],
+        "oracle_visibility": "public evaluator-owned tests; not a hidden benchmark"
+      },
+      "pr": {
+        "title": "Create subscription API",
+        "ticket": "DEMO-101",
+        "head": "demo/subscription-api",
+        "base": "main",
+        "base_commit": "ae761cb877aa4bcc28fd28dd1cfd571d82edc2f5",
+        "candidate_commit": "2381a9c87f1576b8b17bf7da9f66fa911cca1f6a",
+        "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+        "status": "local-draft-bundle",
+        "url": null,
+        "github_created": false,
+        "body_path": "artifacts/A/pull-request.md"
+      }
+    },
+    "B": {
+      "status": "passed",
+      "title": "Self-healing engineering",
+      "diagnosis": {
+        "agent": "diagnostician",
+        "mode": "reference-replay",
+        "location": "calculate_price",
+        "finding": "Injected premium-price branch returns zero instead of 900 cents.",
+        "evidence": [
+          "premium subscriptions must cost 900 cents",
+          "test_basic_price (__main__.suite_for.<locals>.ServiceContracts.test_basic_price) ... ok\ntest_conflicting_key (__main__.suite_for.<locals>.ServiceContracts.test_conflicting_key) ... ok\ntest_create_identity (__main__.suite_for.<locals>.ServiceContracts.test_create_identity) ... ok\ntest_get_and_cancel (__main__.suite_for.<locals>.ServiceContracts.test_get_and_cancel) ... ok\ntest_idempotent_create (__main__.suite_for.<locals>.ServiceContracts.test_idempotent_create) ... ok\ntest_input_validation (__main__.suite_for.<locals>.ServiceContracts.test_input_validation) ... ok\ntest_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration) ... ok\ntest_missing_key (__main__.suite_for.<locals>.ServiceContracts.test_missing_key) ... ok\ntest_not_found (__main__.suite_for.<locals>.ServiceContracts.test_not_found) ... ok\ntest_owner_isolation (__main__.suite_for.<locals>.ServiceContracts.test_owner_isolation) ... ok\ntest_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price) ... FAIL\ntest_same_key_different_customer (__main__.suite_for.<locals>.ServiceContracts.test_same_key_different_customer) ... ok\ntest_http_invalid_payload (__main__.suite_for.<locals>.HTTPContracts.test_http_invalid_payload) ... ok\ntest_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle) ... FAIL\ntest_http_missing_identity (__main__.suite_for.<locals>.HTTPContracts.test_http_missing_identity) ... ok\ntest_http_unknown_route (__main__.suite_for.<locals>.HTTPContracts.test_http_unknown_route) ... ok\n\n======================================================================\nFAIL: test_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/scratch/03942a5565c5/forgesdlc/forgesdlc/oracle.py\", line 38, in test_premium_price\n    self.assertEqual(self.create()[0][\"price_cents\"], 900)\nAssertionError: 0 != 900\n\n======================================================================\nFAIL: test_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/scratch/03942a5565c5/forgesdlc/forgesdlc/oracle.py\", line 119, in test_http_lifecycle\n    self.assertEqual(item[\"price_cents\"], 900)\nAssertionError: 0 != 900\n\n----------------------------------------------------------------------\nRan 16 tests in 0.062s\n\nFAILED (failures=2)\n"
+        ],
+        "limitations": "Rules detect seeded fixture mutations, not arbitrary production bugs."
+      },
+      "before": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "test_basic_price (__main__.suite_for.<locals>.ServiceContracts.test_basic_price) ... ok\ntest_conflicting_key (__main__.suite_for.<locals>.ServiceContracts.test_conflicting_key) ... ok\ntest_create_identity (__main__.suite_for.<locals>.ServiceContracts.test_create_identity) ... ok\ntest_get_and_cancel (__main__.suite_for.<locals>.ServiceContracts.test_get_and_cancel) ... ok\ntest_idempotent_create (__main__.suite_for.<locals>.ServiceContracts.test_idempotent_create) ... ok\ntest_input_validation (__main__.suite_for.<locals>.ServiceContracts.test_input_validation) ... ok\ntest_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration) ... ok\ntest_missing_key (__main__.suite_for.<locals>.ServiceContracts.test_missing_key) ... ok\ntest_not_found (__main__.suite_for.<locals>.ServiceContracts.test_not_found) ... ok\ntest_owner_isolation (__main__.suite_for.<locals>.ServiceContracts.test_owner_isolation) ... ok\ntest_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price) ... FAIL\ntest_same_key_different_customer (__main__.suite_for.<locals>.ServiceContracts.test_same_key_different_customer) ... ok\ntest_http_invalid_payload (__main__.suite_for.<locals>.HTTPContracts.test_http_invalid_payload) ... ok\ntest_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle) ... FAIL\ntest_http_missing_identity (__main__.suite_for.<locals>.HTTPContracts.test_http_missing_identity) ... ok\ntest_http_unknown_route (__main__.suite_for.<locals>.HTTPContracts.test_http_unknown_route) ... ok\n\n======================================================================\nFAIL: test_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/scratch/03942a5565c5/forgesdlc/forgesdlc/oracle.py\", line 38, in test_premium_price\n    self.assertEqual(self.create()[0][\"price_cents\"], 900)\nAssertionError: 0 != 900\n\n======================================================================\nFAIL: test_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/scratch/03942a5565c5/forgesdlc/forgesdlc/oracle.py\", line 119, in test_http_lifecycle\n    self.assertEqual(item[\"price_cents\"], 900)\nAssertionError: 0 != 900\n\n----------------------------------------------------------------------\nRan 16 tests in 0.062s\n\nFAILED (failures=2)\n",
+        "duration_seconds": 0.207,
+        "source_digest": "2910a88e19ecb39ce58defab707d0438857ed69a10cf0f0bfeaf744aabdf9ca6",
+        "oracle_sha256": "dd3a97bbbac72e6338da8a073788880d89519ac0d5e0538179fe7ed643044f8d",
+        "command": [
+          "python",
+          "-I",
+          "oracle.py",
+          "repository"
+        ],
+        "oracle_visibility": "public evaluator-owned tests; not a hidden benchmark"
+      },
+      "verification": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "test_basic_price (__main__.suite_for.<locals>.ServiceContracts.test_basic_price) ... ok\ntest_conflicting_key (__main__.suite_for.<locals>.ServiceContracts.test_conflicting_key) ... ok\ntest_create_identity (__main__.suite_for.<locals>.ServiceContracts.test_create_identity) ... ok\ntest_get_and_cancel (__main__.suite_for.<locals>.ServiceContracts.test_get_and_cancel) ... ok\ntest_idempotent_create (__main__.suite_for.<locals>.ServiceContracts.test_idempotent_create) ... ok\ntest_input_validation (__main__.suite_for.<locals>.ServiceContracts.test_input_validation) ... ok\ntest_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration) ... ok\ntest_missing_key (__main__.suite_for.<locals>.ServiceContracts.test_missing_key) ... ok\ntest_not_found (__main__.suite_for.<locals>.ServiceContracts.test_not_found) ... ok\ntest_owner_isolation (__main__.suite_for.<locals>.ServiceContracts.test_owner_isolation) ... ok\ntest_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price) ... ok\ntest_same_key_different_customer (__main__.suite_for.<locals>.ServiceContracts.test_same_key_different_customer) ... ok\ntest_http_invalid_payload (__main__.suite_for.<locals>.HTTPContracts.test_http_invalid_payload) ... ok\ntest_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle) ... ok\ntest_http_missing_identity (__main__.suite_for.<locals>.HTTPContracts.test_http_missing_identity) ... ok\ntest_http_unknown_route (__main__.suite_for.<locals>.HTTPContracts.test_http_unknown_route) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.041s\n\nOK\n",
+        "duration_seconds": 0.158,
+        "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+        "oracle_sha256": "dd3a97bbbac72e6338da8a073788880d89519ac0d5e0538179fe7ed643044f8d",
+        "command": [
+          "python",
+          "-I",
+          "oracle.py",
+          "repository"
+        ],
+        "oracle_visibility": "public evaluator-owned tests; not a hidden benchmark"
+      },
+      "evaluation": {
+        "status": "passed",
+        "before_failed": true,
+        "after_passed": true,
+        "oracle_unchanged": true,
+        "attempt_limit": 2,
+        "causal_scope": "seeded fixture mutation",
+        "model_quality_benchmark": false
+      },
+      "pr": {
+        "title": "Repair premium price regression",
+        "ticket": "LOCAL-REGRESSION-1",
+        "head": "demo/self-heal",
+        "base": "demo/regression",
+        "base_commit": "09565ffdc853be3382f713a53af2efe3b68beaa3",
+        "candidate_commit": "266d9a44ef4883560b42727733ccecbbc0e2632f",
+        "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+        "status": "local-draft-bundle",
+        "url": null,
+        "github_created": false,
+        "body_path": "artifacts/B/pull-request.md"
+      }
+    },
+    "C": {
+      "status": "passed",
+      "title": "Production intelligence (synthetic telemetry)",
+      "observation": {
+        "status": "regression",
+        "baseline_p95_ms": 108,
+        "candidate_p95_ms": 658,
+        "ratio": 6.093,
+        "before_count": 30,
+        "after_count": 30,
+        "release": "c314241da37aed9d740ea3f9af5b6450d52ef78d",
+        "baseline_release": "266d9a44ef4883560b42727733ccecbbc0e2632f",
+        "route": "GET /subscriptions/{id}",
+        "trace_ids": [
+          "synthetic-after-000",
+          "synthetic-after-001",
+          "synthetic-after-002",
+          "synthetic-after-003",
+          "synthetic-after-004"
+        ],
+        "source": "synthetic-fixture",
+        "causal_claim": false,
+        "finding": "Latency increase is temporally associated with this sandbox release; investigate causality."
+      },
+      "issue": {
+        "key": "LOCAL-LATENCY-1",
+        "source": "local issue ledger; not Jira",
+        "operation_key": "f8c875a1af3d908d982c",
+        "summary": "Investigate subscription lookup latency after sandbox release",
+        "release": "c314241da37aed9d740ea3f9af5b6450d52ef78d",
+        "observation": {
+          "status": "regression",
+          "baseline_p95_ms": 108,
+          "candidate_p95_ms": 658,
+          "ratio": 6.093,
+          "before_count": 30,
+          "after_count": 30,
+          "release": "c314241da37aed9d740ea3f9af5b6450d52ef78d",
+          "baseline_release": "266d9a44ef4883560b42727733ccecbbc0e2632f",
+          "route": "GET /subscriptions/{id}",
+          "trace_ids": [
+            "synthetic-after-000",
+            "synthetic-after-001",
+            "synthetic-after-002",
+            "synthetic-after-003",
+            "synthetic-after-004"
+          ],
+          "source": "synthetic-fixture",
+          "causal_claim": false,
+          "finding": "Latency increase is temporally associated with this sandbox release; investigate causality."
+        },
+        "acceptance_criteria": [
+          "Remove injected lookup delay",
+          "Preserve service and HTTP conformance"
+        ],
+        "development_run_id": "1019a073b79a4eafb0d7b1871e580f8b-remediation",
+        "parent_run_id": "1019a073b79a4eafb0d7b1871e580f8b"
+      },
+      "before": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "test_basic_price (__main__.suite_for.<locals>.ServiceContracts.test_basic_price) ... ok\ntest_conflicting_key (__main__.suite_for.<locals>.ServiceContracts.test_conflicting_key) ... ok\ntest_create_identity (__main__.suite_for.<locals>.ServiceContracts.test_create_identity) ... ok\ntest_get_and_cancel (__main__.suite_for.<locals>.ServiceContracts.test_get_and_cancel) ... ok\ntest_idempotent_create (__main__.suite_for.<locals>.ServiceContracts.test_idempotent_create) ... ok\ntest_input_validation (__main__.suite_for.<locals>.ServiceContracts.test_input_validation) ... ok\ntest_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration) ... FAIL\ntest_missing_key (__main__.suite_for.<locals>.ServiceContracts.test_missing_key) ... ok\ntest_not_found (__main__.suite_for.<locals>.ServiceContracts.test_not_found) ... ok\ntest_owner_isolation (__main__.suite_for.<locals>.ServiceContracts.test_owner_isolation) ... ok\ntest_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price) ... ok\ntest_same_key_different_customer (__main__.suite_for.<locals>.ServiceContracts.test_same_key_different_customer) ... ok\ntest_http_invalid_payload (__main__.suite_for.<locals>.HTTPContracts.test_http_invalid_payload) ... ok\ntest_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle) ... ok\ntest_http_missing_identity (__main__.suite_for.<locals>.HTTPContracts.test_http_missing_identity) ... ok\ntest_http_unknown_route (__main__.suite_for.<locals>.HTTPContracts.test_http_unknown_route) ... ok\n\n======================================================================\nFAIL: test_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/scratch/03942a5565c5/forgesdlc/forgesdlc/oracle.py\", line 85, in test_lookup_delay_configuration\n    self.assertEqual(subscription.LOOKUP_DELAY_SECONDS, 0.0,\nAssertionError: 0.04 != 0.0 : artificial lookup delay must be removed\n\n----------------------------------------------------------------------\nRan 16 tests in 0.427s\n\nFAILED (failures=1)\n",
+        "duration_seconds": 0.547,
+        "source_digest": "8d5509b078b3b421845f3a4a58dd431629b181e3870f3d015de6410757c1c877",
+        "oracle_sha256": "dd3a97bbbac72e6338da8a073788880d89519ac0d5e0538179fe7ed643044f8d",
+        "command": [
+          "python",
+          "-I",
+          "oracle.py",
+          "repository"
+        ],
+        "oracle_visibility": "public evaluator-owned tests; not a hidden benchmark"
+      },
+      "verification": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "test_basic_price (__main__.suite_for.<locals>.ServiceContracts.test_basic_price) ... ok\ntest_conflicting_key (__main__.suite_for.<locals>.ServiceContracts.test_conflicting_key) ... ok\ntest_create_identity (__main__.suite_for.<locals>.ServiceContracts.test_create_identity) ... ok\ntest_get_and_cancel (__main__.suite_for.<locals>.ServiceContracts.test_get_and_cancel) ... ok\ntest_idempotent_create (__main__.suite_for.<locals>.ServiceContracts.test_idempotent_create) ... ok\ntest_input_validation (__main__.suite_for.<locals>.ServiceContracts.test_input_validation) ... ok\ntest_lookup_delay_configuration (__main__.suite_for.<locals>.ServiceContracts.test_lookup_delay_configuration) ... ok\ntest_missing_key (__main__.suite_for.<locals>.ServiceContracts.test_missing_key) ... ok\ntest_not_found (__main__.suite_for.<locals>.ServiceContracts.test_not_found) ... ok\ntest_owner_isolation (__main__.suite_for.<locals>.ServiceContracts.test_owner_isolation) ... ok\ntest_premium_price (__main__.suite_for.<locals>.ServiceContracts.test_premium_price) ... ok\ntest_same_key_different_customer (__main__.suite_for.<locals>.ServiceContracts.test_same_key_different_customer) ... ok\ntest_http_invalid_payload (__main__.suite_for.<locals>.HTTPContracts.test_http_invalid_payload) ... ok\ntest_http_lifecycle (__main__.suite_for.<locals>.HTTPContracts.test_http_lifecycle) ... ok\ntest_http_missing_identity (__main__.suite_for.<locals>.HTTPContracts.test_http_missing_identity) ... ok\ntest_http_unknown_route (__main__.suite_for.<locals>.HTTPContracts.test_http_unknown_route) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.046s\n\nOK\n",
+        "duration_seconds": 0.186,
+        "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+        "oracle_sha256": "dd3a97bbbac72e6338da8a073788880d89519ac0d5e0538179fe7ed643044f8d",
+        "command": [
+          "python",
+          "-I",
+          "oracle.py",
+          "repository"
+        ],
+        "oracle_visibility": "public evaluator-owned tests; not a hidden benchmark"
+      },
+      "pr": {
+        "title": "Remediate subscription lookup latency",
+        "ticket": "LOCAL-LATENCY-1",
+        "head": "demo/latency-remediation",
+        "base": "demo/latency-release",
+        "base_commit": "c314241da37aed9d740ea3f9af5b6450d52ef78d",
+        "candidate_commit": "f911767aeb8145d0ee45400cc93aab8e6d5f6e32",
+        "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+        "status": "local-draft-bundle",
+        "url": null,
+        "github_created": false,
+        "body_path": "artifacts/C/pull-request.md"
+      },
+      "limitations": "Correlated synthetic telemetry; no real production incident or deployed recovery."
+    }
+  },
+  "agent_calls": [
+    {
+      "role": "planner",
+      "provider_calls": 0,
+      "cost_usd": 0
+    },
+    {
+      "role": "coder",
+      "provider_calls": 0,
+      "cost_usd": 0,
+      "reason": "curated reference implementation"
+    },
+    {
+      "role": "reviewer",
+      "provider_calls": 0,
+      "cost_usd": 0
+    },
+    {
+      "role": "diagnostician",
+      "provider_calls": 0,
+      "cost_usd": 0
+    },
+    {
+      "role": "coder",
+      "provider_calls": 0,
+      "cost_usd": 0,
+      "reason": "curated reference implementation"
+    },
+    {
+      "role": "reviewer",
+      "provider_calls": 0,
+      "cost_usd": 0
+    },
+    {
+      "role": "diagnostician",
+      "provider_calls": 0,
+      "cost_usd": 0
+    },
+    {
+      "role": "planner",
+      "provider_calls": 0,
+      "cost_usd": 0
+    },
+    {
+      "role": "coder",
+      "provider_calls": 0,
+      "cost_usd": 0,
+      "reason": "curated reference implementation"
+    },
+    {
+      "role": "reviewer",
+      "provider_calls": 0,
+      "cost_usd": 0
+    }
+  ],
+  "duration_seconds": 1.478,
+  "live_jira": false,
+  "live_github_prs": false,
+  "production_deployed": false,
+  "implemented_scenarios": [
+    "A",
+    "B",
+    "C"
+  ],
+  "advanced_catalog": {
+    "designed": 60,
+    "fully_implemented": false
+  },
+  "limitations": [
+    "Reference replay is not autonomous LLM inference",
+    "No hostile-code sandbox",
+    "No durable mid-run crash recovery",
+    "No Langfuse/OpenTelemetry exporter",
+    "No live model quality benchmark",
+    "GitHub and Jira publication are optional separate actions"
+  ]
+}
