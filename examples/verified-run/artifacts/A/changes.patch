@@ -1,0 +1,512 @@
+diff --git a/docs/ADR-001.md b/docs/ADR-001.md
+new file mode 100644
+index 0000000..8766e30
+--- /dev/null
++++ b/docs/ADR-001.md
+@@ -0,0 +1,19 @@
++# ADR-001: Subscription sandbox API
++
++Status: accepted for trusted demonstration only.
++
++## Decision
++
++HTTPServer adapter → SubscriptionService → SQLite.
++
++Use integer cents, a unique (customer_id, idempotency_key) constraint, and SQL parameters.
++
++## Alternatives
++
++PostgreSQL for concurrent production workloads; excluded from this local fixture.
++
++## Tradeoffs
++
++Single-process demonstration; no payments, OIDC, network sandbox, or production release.
++
++X-Customer-Id is an explicitly spoofable sandbox identity, not authentication.
+diff --git a/docs/architecture.mmd b/docs/architecture.mmd
+new file mode 100644
+index 0000000..125a45c
+--- /dev/null
++++ b/docs/architecture.mmd
+@@ -0,0 +1,4 @@
++flowchart TD
++  Client["Sandbox client"] --> HTTP["HTTP adapter"]
++  HTTP --> Service["Subscription service"]
++  Service --> Store["SQLite"]
+diff --git a/docs/openapi.json b/docs/openapi.json
+new file mode 100644
+index 0000000..306d467
+--- /dev/null
++++ b/docs/openapi.json
+@@ -0,0 +1,378 @@
++{
++  "openapi": "3.0.3",
++  "info": {
++    "title": "Sandbox Subscription API",
++    "version": "1.0.0"
++  },
++  "servers": [
++    {
++      "url": "http://127.0.0.1:8080"
++    }
++  ],
++  "paths": {
++    "/subscriptions": {
++      "post": {
++        "parameters": [
++          {
++            "name": "X-Customer-Id",
++            "in": "header",
++            "required": true,
++            "schema": {
++              "type": "string"
++            },
++            "description": "Spoofable sandbox identity only"
++          },
++          {
++            "name": "Idempotency-Key",
++            "in": "header",
++            "required": true,
++            "schema": {
++              "type": "string",
++              "minLength": 1,
++              "maxLength": 128
++            }
++          }
++        ],
++        "requestBody": {
++          "required": true,
++          "content": {
++            "application/json": {
++              "schema": {
++                "type": "object",
++                "required": [
++                  "customer_id",
++                  "plan"
++                ],
++                "additionalProperties": false,
++                "properties": {
++                  "customer_id": {
++                    "type": "string",
++                    "minLength": 1,
++                    "maxLength": 128
++                  },
++                  "plan": {
++                    "type": "string",
++                    "enum": [
++                      "basic",
++                      "premium"
++                    ]
++                  }
++                }
++              }
++            }
++          }
++        },
++        "responses": {
++          "200": {
++            "description": "Success",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "id": {
++                      "type": "string"
++                    },
++                    "customer_id": {
++                      "type": "string"
++                    },
++                    "plan": {
++                      "type": "string"
++                    },
++                    "price_cents": {
++                      "type": "integer"
++                    },
++                    "status": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "201": {
++            "description": "Success",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "id": {
++                      "type": "string"
++                    },
++                    "customer_id": {
++                      "type": "string"
++                    },
++                    "plan": {
++                      "type": "string"
++                    },
++                    "price_cents": {
++                      "type": "integer"
++                    },
++                    "status": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "400": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "401": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "403": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "409": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          }
++        }
++      }
++    },
++    "/subscriptions/{id}": {
++      "get": {
++        "parameters": [
++          {
++            "name": "X-Customer-Id",
++            "in": "header",
++            "required": true,
++            "schema": {
++              "type": "string"
++            },
++            "description": "Spoofable sandbox identity only"
++          },
++          {
++            "name": "id",
++            "in": "path",
++            "required": true,
++            "schema": {
++              "type": "string"
++            }
++          }
++        ],
++        "responses": {
++          "200": {
++            "description": "Success",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "id": {
++                      "type": "string"
++                    },
++                    "customer_id": {
++                      "type": "string"
++                    },
++                    "plan": {
++                      "type": "string"
++                    },
++                    "price_cents": {
++                      "type": "integer"
++                    },
++                    "status": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "401": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "403": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "404": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          }
++        }
++      }
++    },
++    "/subscriptions/{id}/cancel": {
++      "post": {
++        "parameters": [
++          {
++            "name": "X-Customer-Id",
++            "in": "header",
++            "required": true,
++            "schema": {
++              "type": "string"
++            },
++            "description": "Spoofable sandbox identity only"
++          },
++          {
++            "name": "id",
++            "in": "path",
++            "required": true,
++            "schema": {
++              "type": "string"
++            }
++          }
++        ],
++        "responses": {
++          "200": {
++            "description": "Success",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "id": {
++                      "type": "string"
++                    },
++                    "customer_id": {
++                      "type": "string"
++                    },
++                    "plan": {
++                      "type": "string"
++                    },
++                    "price_cents": {
++                      "type": "integer"
++                    },
++                    "status": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "401": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "403": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          },
++          "404": {
++            "description": "Error",
++            "content": {
++              "application/json": {
++                "schema": {
++                  "type": "object",
++                  "properties": {
++                    "error": {
++                      "type": "string"
++                    }
++                  }
++                }
++              }
++            }
++          }
++        }
++      }
++    }
++  }
++}
+diff --git a/subscription.py b/subscription.py
+index 13e8b5a..e5e05d8 100644
+--- a/subscription.py
++++ b/subscription.py
+@@ -1,5 +1,86 @@
+-"""Unimplemented service fixture; scenario A replaces this file."""
++"""Trusted reference implementation used ONLY by replay agents.
++
++SQLite demo billing records, not a payment service. Sandbox identity headers
++must not be treated as production authentication.
++"""
++import json
++import sqlite3
++import time
++import uuid
++
++LOOKUP_DELAY_SECONDS = 0.0
++PRICES = {"basic": 500, "premium": 900}
++
++
++class APIError(Exception):
++    def __init__(self, status, message):
++        self.status = status
++        self.message = message
++        super().__init__(message)
++
++
++def calculate_price(plan):
++    return PRICES[plan]
++
+ 
+ class SubscriptionService:
+     def __init__(self, database=":memory:"):
+-        raise NotImplementedError("DEMO-101 subscription API not implemented")
++        self.db = sqlite3.connect(database, check_same_thread=False)
++        self.db.execute("""CREATE TABLE IF NOT EXISTS subscriptions (
++          id TEXT PRIMARY KEY, customer_id TEXT NOT NULL, plan TEXT NOT NULL,
++          price_cents INTEGER NOT NULL, status TEXT NOT NULL,
++          idem_key TEXT NOT NULL, payload TEXT NOT NULL,
++          UNIQUE(customer_id, idem_key))""")
++
++    def close(self):
++        self.db.close()
++
++    def _record(self, row):
++        if not row:
++            raise APIError(404, "subscription not found")
++        return dict(zip(("id", "customer_id", "plan", "price_cents", "status"), row[:5]))
++
++    def create(self, payload, key, identity):
++        if not isinstance(payload, dict):
++            raise APIError(400, "JSON object required")
++        customer = payload.get("customer_id")
++        plan = payload.get("plan")
++        if (not isinstance(customer, str) or not customer.strip()
++                or not isinstance(plan, str) or plan not in PRICES
++                or not isinstance(key, str) or not key.strip()
++                or len(key) > 128 or len(customer) > 128
++                or set(payload) != {"customer_id", "plan"}):
++            raise APIError(400, "valid customer_id, plan and idempotency key required")
++        if identity != customer:
++            raise APIError(403, "customer identity does not match")
++        canonical = json.dumps(payload, sort_keys=True)
++        row = self.db.execute("SELECT * FROM subscriptions WHERE customer_id=? AND idem_key=?",
++                              (customer, key)).fetchone()
++        if row:
++            if row[6] != canonical:
++                raise APIError(409, "idempotency key has a different payload")
++            return self._record(row), False
++        record = (str(uuid.uuid4()), customer, plan, calculate_price(plan), "active", key, canonical)
++        try:
++            with self.db:
++                self.db.execute("INSERT INTO subscriptions VALUES (?,?,?,?,?,?,?)", record)
++        except sqlite3.IntegrityError:
++            # Another serialized request may already own this key.
++            return self.create(payload, key, identity)
++        return self._record(record), True
++
++    def get(self, subscription_id, identity):
++        time.sleep(LOOKUP_DELAY_SECONDS)
++        record = self._record(self.db.execute("SELECT * FROM subscriptions WHERE id=?",
++                                             (subscription_id,)).fetchone())
++        if identity != record["customer_id"]:
++            raise APIError(403, "subscription belongs to another customer")
++        return record
++
++    def cancel(self, subscription_id, identity):
++        record = self.get(subscription_id, identity)
++        with self.db:
++            self.db.execute("UPDATE subscriptions SET status='cancelled' WHERE id=?",
++                            (subscription_id,))
++        record["status"] = "cancelled"
++        return record

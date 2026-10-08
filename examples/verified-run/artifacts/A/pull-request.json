@@ -1,0 +1,13 @@
+{
+  "title": "Create subscription API",
+  "ticket": "DEMO-101",
+  "head": "demo/subscription-api",
+  "base": "main",
+  "base_commit": "ae761cb877aa4bcc28fd28dd1cfd571d82edc2f5",
+  "candidate_commit": "2381a9c87f1576b8b17bf7da9f66fa911cca1f6a",
+  "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+  "status": "local-draft-bundle",
+  "url": null,
+  "github_created": false,
+  "body_path": "artifacts/A/pull-request.md"
+}
