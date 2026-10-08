@@ -1,0 +1,18 @@
+{
+  "key": "DEMO-101",
+  "source": "local Jira-shaped fixture; not a Jira API response",
+  "fields": {
+    "summary": "Create a subscription API",
+    "description": "Build a subscription service for a sandbox product. No real billing or payment processor is involved.",
+    "acceptance_criteria": [
+      "POST /subscriptions creates a basic (500 cents) or premium (900 cents) subscription",
+      "Require customer_id, plan, and an Idempotency-Key header",
+      "Repeated identical requests reuse the subscription; changed payload with the same key returns 409",
+      "GET /subscriptions/{id} reads a subscription",
+      "POST /subscriptions/{id}/cancel cancels idempotently",
+      "The sandbox X-Customer-Id identity must own reads and cancellation; other owners receive 403",
+      "Invalid inputs return 400, missing subscriptions return 404",
+      "Subscription lookup has no artificial delay"
+    ]
+  }
+}
