@@ -1,0 +1,13 @@
+{
+  "title": "Repair premium price regression",
+  "ticket": "LOCAL-REGRESSION-1",
+  "head": "demo/self-heal",
+  "base": "demo/regression",
+  "base_commit": "09565ffdc853be3382f713a53af2efe3b68beaa3",
+  "candidate_commit": "266d9a44ef4883560b42727733ccecbbc0e2632f",
+  "source_digest": "0a55b6d7ba6578ab4890df2529e6859e419bc083555dad68e09e0a4b648a048f",
+  "status": "local-draft-bundle",
+  "url": null,
+  "github_created": false,
+  "body_path": "artifacts/B/pull-request.md"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "before_failed": true,
+  "after_passed": true,
+  "oracle_unchanged": true,
+  "attempt_limit": 2,
+  "causal_scope": "seeded fixture mutation",
+  "model_quality_benchmark": false
+}

@@ -1,0 +1,13 @@
+diff --git a/subscription.py b/subscription.py
+index 0a89340..e5e05d8 100644
+--- a/subscription.py
++++ b/subscription.py
+@@ -20,7 +20,7 @@ class APIError(Exception):
+ 
+ 
+ def calculate_price(plan):
+-    return 0 if plan == 'premium' else PRICES[plan]
++    return PRICES[plan]
+ 
+ 
+ class SubscriptionService:
