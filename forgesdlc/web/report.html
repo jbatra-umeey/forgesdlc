@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ForgeSDLC · Verified delivery loop</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1120;--panel:#121d31;--line:#283650;--text:#e9effa;--muted:#a3b2cb;--mint:#72edc0;--blue:#86b7ff;--orange:#f7bc71}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:40px 24px}header{display:flex;justify-content:space-between;gap:30px;align-items:center}.eyebrow{color:var(--mint);font-size:12px;letter-spacing:2px;text-transform:uppercase}h1{font-size:42px;line-height:1.12;margin:10px 0 16px;letter-spacing:-1px}p{color:var(--muted)}.badge{display:inline-block;border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--mint)}.notice{background:#252238;border:1px solid #615138;padding:16px 20px;border-radius:12px;margin:28px 0;color:var(--orange)}.metrics,.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.metric,.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}.metric strong{display:block;font-size:28px}.metric span{color:var(--muted);font-size:12px}.grid{margin:26px 0}.card h2{font-size:21px;margin:6px 0}.letter{font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:1px}.card ul{padding-left:18px;color:var(--muted);font-size:13px}.card a{display:inline-block;font-size:13px;margin:8px 10px 0 0;color:var(--mint)}button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:9px 14px;cursor:pointer}button.active{background:#254557;border-color:var(--mint)}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.event{display:grid;grid-template-columns:32px 90px 150px 1fr;gap:10px;border-bottom:1px solid var(--line);padding:12px 0;font-size:13px}.event span{color:var(--muted)}details{margin:20px 0;border:1px solid var(--line);border-radius:10px;padding:16px}summary{cursor:pointer}pre{overflow:auto;font-size:12px;white-space:pre-wrap;word-break:break-word;color:#b6cced}.small{font-size:12px;color:var(--muted)}footer{margin-top:32px;color:var(--muted);font-size:12px}a{color:var(--blue)}@media(max-width:760px){header{display:block}h1{font-size:32px}.metrics,.grid{grid-template-columns:1fr}.event{grid-template-columns:24px 40px 110px 1fr;font-size:11px}}
+</style></head>
+<body><main>
+<header><div><div class="eyebrow">Evidence-first engineering</div><h1>ForgeSDLC<br>One service. Three delivery loops.</h1><p>Build the feature. Repair the regression. Turn observations into engineering work.</p></div><div><div class="badge" id="status">VERIFIED</div><p class="small" id="run"></p></div></header>
+<div class="notice" id="notice"></div>
+<section class="metrics"><div class="metric"><strong id="scenario-count"></strong><span>Executed A/B/C scenarios</span></div><div class="metric"><strong id="duration"></strong><span>Actual run duration · not video length</span></div><div class="metric"><strong id="ratio"></strong><span>Synthetic p95 latency ratio · scenario C</span></div></section>
+<section class="grid" id="cards"></section>
+<h2>Auditable execution timeline</h2><p>Events below were produced by this run. Filters change the view, not the underlying evidence.</p>
+<div class="controls" id="controls"></div><div id="timeline"></div>
+<details><summary>Capabilities, limits, and mode</summary><pre id="limits"></pre></details>
+<details><summary>Raw run summary</summary><pre id="raw"></pre></details>
+<footer>No production deployment. Local PR bundles are not GitHub PRs. A 60-scenario design catalog does not mean 60 implemented scenarios.<br><a href="summary.json">Summary JSON</a> · <a href="events.jsonl">Event stream</a> · <a href="manifest.json">Evidence checksums</a></footer>
+</main><script>
+const data=__SUMMARY_JSON__;
+const events=__EVENTS_JSON__;
+const el=id=>document.getElementById(id);
+el('status').textContent=data.status.toUpperCase();
+el('run').textContent='Run '+data.run_id.slice(0,12)+' · '+data.orchestrator;
+el('notice').textContent=data.mode==='reference-replay'?'REFERENCE REPLAY: planning, coding and diagnosis use curated templates/rules. Git changes and service/HTTP tests execute for real. Telemetry is synthetic; Jira and GitHub writes are disabled.':'LIVE GATEWAY: real model calls; local tools and tests. Telemetry remains synthetic. Check integration status before claiming live Jira/GitHub publication.';
+el('scenario-count').textContent=Object.keys(data.scenarios).length+' / 3';
+el('duration').textContent=data.duration_seconds+'s';
+el('ratio').textContent=data.scenarios.C.observation.ratio+'×';
+const descriptions={A:['Ticket → plan → contract → implementation → tests → PR bundle','Architecture ADR and OpenAPI','Real SQLite subscription API','Independent service and HTTP checks'],B:['Inject → fail → diagnose → repair → evaluate','Reproducible price regression','Before/after test output','Unchanged evaluator digest'],C:['Observe → correlate → issue → route → repair','Synthetic release-aware telemetry','Deduplicated local remediation issue','Linked development run and verified patch']};
+for(const [key,result] of Object.entries(data.scenarios)){
+ const card=document.createElement('article');card.className='card';
+ const letter=document.createElement('div');letter.className='letter';letter.textContent='SCENARIO '+key+' · '+result.status.toUpperCase();card.append(letter);
+ const heading=document.createElement('h2');heading.textContent=result.title;card.append(heading);
+ const intro=document.createElement('p');intro.textContent=descriptions[key][0];card.append(intro);
+ const list=document.createElement('ul');for(const text of descriptions[key].slice(1)){const item=document.createElement('li');item.textContent=text;list.append(item)}card.append(list);
+ for(const [label,path] of [['Patch','changes.patch'],['PR draft','pull-request.md'],['Review','review.json']]){const a=document.createElement('a');a.textContent=label;a.href='artifacts/'+key+'/'+path;card.append(a)}
+ const sha=document.createElement('p');sha.className='small';sha.textContent='Candidate '+result.pr.candidate_commit.slice(0,12)+' · local bundle';card.append(sha);el('cards').append(card);
+}
+function render(filter){el('timeline').replaceChildren();for(const event of events.filter(e=>filter==='ALL'||e.scenario===filter)){
+ const row=document.createElement('div');row.className='event';for(const text of [event.sequence,event.scenario,event.role,event.action]){const part=document.createElement('span');part.textContent=text;row.append(part)}el('timeline').append(row)}
+ for(const b of el('controls').children)b.classList.toggle('active',b.dataset.filter===filter);
+}
+for(const key of ['ALL','A','B','C']){const button=document.createElement('button');button.textContent=key==='ALL'?'All scenarios':'Scenario '+key;button.dataset.filter=key;button.onclick=()=>render(key);el('controls').append(button)}
+el('limits').textContent=JSON.stringify({mode:data.mode,live_jira:data.live_jira,live_github_prs:data.live_github_prs,production_deployed:data.production_deployed,advanced_catalog:data.advanced_catalog,limitations:data.limitations},null,2);
+el('raw').textContent=JSON.stringify(data,null,2);render('ALL');
+</script></body></html>
