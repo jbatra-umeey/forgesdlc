@@ -360,4 +360,3 @@ class Harness:
         data = json.dumps(summary).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
         events = json.dumps(self.events).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
         (self.root / "report.html").write_text(template.replace("__SUMMARY_JSON__", data).replace("__EVENTS_JSON__", events))
-

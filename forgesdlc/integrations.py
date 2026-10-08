@@ -97,4 +97,3 @@ class GitHubAdapter:
             return {**existing[0], "reused": True}
         return self.client.request("POST", prefix + "/pulls", {
             "head": head, "base": base, "title": title, "body": body, "draft": True})
-

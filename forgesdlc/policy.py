@@ -58,4 +58,3 @@ def validate_approval(approval, commit, digest):
         raise PolicyError("approval does not bind to the current candidate and evidence")
     if approval.get("decision") != "approved":
         raise PolicyError("approval required")
-

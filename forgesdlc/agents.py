@@ -155,4 +155,3 @@ class GatewayAgents:
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
-

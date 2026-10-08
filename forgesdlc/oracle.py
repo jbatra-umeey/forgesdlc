@@ -149,4 +149,3 @@ if __name__ == "__main__":
         traceback.print_exc()
         raise SystemExit(1)
     raise SystemExit(0 if result.wasSuccessful() else 1)
-

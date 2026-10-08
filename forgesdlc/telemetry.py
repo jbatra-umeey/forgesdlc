@@ -50,4 +50,3 @@ def correlate(rows, deployment, min_samples=20, threshold_ratio=2.0):
             "route": deployment["route"], "trace_ids": [r["trace_id"] for r in after[:5]],
             "source": "synthetic-fixture", "causal_claim": False,
             "finding": "Latency increase is temporally associated with this sandbox release; investigate causality."}
-
