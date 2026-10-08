@@ -1,0 +1,4 @@
+flowchart TD
+  Client["Sandbox client"] --> HTTP["HTTP adapter"]
+  HTTP --> Service["Subscription service"]
+  Service --> Store["SQLite"]
